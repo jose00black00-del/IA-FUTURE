@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>VALEN-LLAMA | Casos de uso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #02030a;
+      --panel: #090b14;
+      --panel-soft: #0d1020;
+      --text: #e8ecff;
+      --muted: #8f96b2;
+      --accent: #ff2fd6;
+      --accent-blue: #3fd5ff;
+      --border-soft: rgba(255,255,255,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      background:
+        radial-gradient(circle at top left, #161a3a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #2c0740 0, transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 3, 10, 0.96),
+        rgba(2, 3, 10, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .shell-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 2rem;
+    }
+
+    .logo-main {
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.8rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      position: relative;
+      color: var(--muted);
+    }
+
+    nav a:hover {
+      color: var(--accent-blue);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      transition: width 0.18s ease-out;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .active-link {
+      color: var(--accent-blue);
+    }
+    .active-link::after {
+      width: 100%;
+    }
+
+    main {
+      width: min(1050px, 100%);
+      margin: 0 auto;
+      padding: 2.7rem 1.4rem 3.4rem;
+    }
+
+    .page-kicker {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .intro-text {
+      font-size: 0.96rem;
+      color: var(--muted);
+      max-width: 40rem;
+      line-height: 1.6;
+      margin-bottom: 1.4rem;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 1.6rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .summary-card,
+    .highlight-card {
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 1rem 1.1rem 1.1rem;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+    }
+
+    .summary-card h2,
+    .highlight-card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+      color: var(--accent-blue);
+    }
+
+    .summary-card p,
+    .highlight-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tagline {
+      font-size: 0.8rem;
+      color: var(--accent-blue);
+      margin-top: 0.8rem;
+    }
+
+    /* grid de casos */
+
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+      max-width: 36rem;
+    }
+
+    .cases-grid {
+      display: grid;
+      gap: 1.3rem;
+    }
+
+    @media (min-width: 820px) {
+      .cases-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .case {
+      background: var(--panel-soft);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 0.95rem 0.95rem 1.05rem;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.6);
+      transition: transform 0.15s ease-out,
+                  box-shadow 0.15s ease-out,
+                  border-color 0.15s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at top right,
+                  rgba(255,47,214,0.16),
+                  transparent 55%);
+      opacity:0;
+      transition:opacity 0.2s ease-out;
+      pointer-events:none;
+    }
+
+    .case:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+      border-color: rgba(63,213,255,0.55);
+    }
+
+    .case:hover::before{
+      opacity:1;
+    }
+
+    .case-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .case-title {
+      font-size: 0.98rem;
+      margin-bottom: 0.3rem;
+      color: var(--accent-blue);
+    }
+
+    .case-text {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .pill {
+      display:inline-block;
+      font-size:0.72rem;
+      padding:0.15rem 0.55rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.16);
+      color:var(--muted);
+      margin-top:0.5rem;
+    }
+
+    /* bloques por asignatura */
+
+    .subject-blocks {
+      margin-top: 2.3rem;
+      display: grid;
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 820px) {
+      .subject-blocks {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .subject {
+      background: #070916;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 0.95rem 1rem 1rem;
+    }
+
+    .subject h3 {
+      font-size: 0.98rem;
+      margin-bottom: 0.35rem;
+      color: var(--accent);
+    }
+
+    .subject p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .subject span {
+      color: var(--accent-blue);
+    }
+
+    .closing {
+      margin-top: 2.6rem;
+      background: linear-gradient(
+        120deg,
+        rgba(255,47,214,0.13),
+        rgba(63,213,255,0.12)
+      );
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 1.15rem 1.3rem;
+      font-size: 0.9rem;
+      color: #f5f5ff;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.7);
+    }
+
+    .closing strong {
+      color: #ffffff;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.4rem 1.3rem 2.1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2.8rem;
+    }
+
+    @media (max-width: 720px) {
+      .shell-bar {
+        padding-inline: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+      nav {
+        gap: 1.1rem;
+        flex-wrap: wrap;
+      }
+      .summary-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="shell-bar">
+    <div class="logo">
+      <div class="logo-main">VALEN-LLAMA</div>
+      <div class="logo-sub">Asistente de IA local · Proyecto de tesis</div>
+    </div>
+
+    <nav>
+      <a href="principal.html">Inicio</a>
+      <a href="sistema.html">El Sistema</a>
+      <a href="casos.html" class="active-link">Casos de uso</a>
+      <a href="descarga.html">Instalación</a>
+      <a href="autor.html">Autor</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page-kicker">Aplicaciones prácticas</div>
+  <h1>Casos de uso <span>en el entorno escolar</span></h1>
+  <p class="intro-text">
+    Esta página no describe cómo está construido VALEN-LLAMA, sino
+    <strong>para qué se puede usar</strong> dentro de un centro educativo cubano:
+    situaciones concretas donde un asistente de IA local reduce tiempo,
+    dudas y frustración.
+  </p>
+
+  <!-- resumen superior -->
+  <div class="summary-row">
+    <section class="summary-card">
+      <h2>Un apoyo silencioso para el estudiante</h2>
+      <p>
+        VALEN-LLAMA funciona como un “segundo canal” de ayuda:
+        responde cuando el profesor está atendiendo a otro grupo,
+        repite explicaciones sin cansarse y adapta el nivel de detalle
+        según las preguntas del alumno.
+      </p>
+      <p class="tagline">
+        No reemplaza al docente. Mantiene al estudiante ocupado pensando
+        en lugar de quedarse bloqueado.
+      </p>
+    </section>
+
+    <section class="highlight-card">
+      <h2>Beneficio para el profesor</h2>
+      <p>
+        El docente puede concentrarse en las partes humanas de la clase
+        —motivación, ejemplos, corrección fina— mientras la IA gestiona
+        dudas técnicas, ejercicios de práctica y consultas rápidas de
+        teoría.
+      </p>
+    </section>
+  </div>
+
+  <!-- grid de casos -->
+  <h2 class="section-title">Casos de uso generales</h2>
+  <p class="section-sub">
+    Algunos escenarios donde un laboratorio con equipos modestos puede
+    aprovechar un asistente local sin internet.
+  </p>
+
+  <div class="cases-grid">
+    <article class="case">
+      <div class="case-icon">📘</div>
+      <h3 class="case-title">Explicación de conceptos difíciles</h3>
+      <p class="case-text">
+        El estudiante escribe una duda puntual (“no entiendo el paso
+        3 de esta operación” o “explícame qué es una variable”) y
+        recibe una respuesta adaptada a lenguaje sencillo, con pasos
+        numerados y ejemplos cortos.
+      </p>
+      <span class="pill">Refuerzo teórico</span>
+    </article>
+
+    <article class="case">
+      <div class="case-icon">🧮</div>
+      <h3 class="case-title">Generación de ejercicios</h3>
+      <p class="case-text">
+        El profesor pide al sistema varias preguntas similares a las
+        vistas en clase. VALEN-LLAMA propone ejercicios, cambios
+        de números y pequeñas variaciones para practicar sin copiar
+        siempre el mismo ejemplo del libro.
+      </p>
+      <span class="pill">Práctica guiada</span>
+    </article>
+
+    <article class="case">
+      <div class="case-icon">📚</div>
+      <h3 class="case-title">Consultas instantáneas</h3>
+      <p class="case-text">
+        Mientras se trabaja en el aula, los alumnos consultan
+        definiciones, fórmulas o significados sin tener que abrir un
+        navegador ni esperar a que cargue una página externa.
+      </p>
+      <span class="pill">Diccionario técnico local</span>
+    </article>
+
+    <article class="case">
+      <div class="case-icon">💻</div>
+      <h3 class="case-title">Ayuda en programación</h3>
+      <p class="case-text">
+        El estudiante copia un fragmento de código con error y
+        pregunta qué podría estar ocurriendo. La IA no programa por
+        él, pero señala posibles fallos y sugiere correcciones
+        básicas.
+      </p>
+      <span class="pill">Soporte a informática</span>
+    </article>
+
+    <article class="case">
+      <div class="case-icon">🧠</div>
+      <h3 class="case-title">Asociaciones personalizadas</h3>
+      <p class="case-text">
+        El módulo de asociaciones permite registrar información
+        específica del centro (nombres de aulas, proyectos internos,
+        acuerdos de la escuela) para que el asistente responda con
+        datos adaptados al contexto local.
+      </p>
+      <span class="pill">Memoria del centro</span>
+    </article>
+
+    <article class="case">
+      <div class="case-icon">🎯</div>
+      <h3 class="case-title">Preparación para evaluaciones</h3>
+      <p class="case-text">
+        VALEN-LLAMA puede plantear preguntas tipo examen, pedir al
+        alumno que explique un tema con sus propias palabras y darle
+        retroalimentación sobre los puntos que omitió.
+      </p>
+      <span class="pill">Entrenamiento previo</span>
+    </article>
+  </div>
+
+  <!-- por asignaturas -->
+  <h2 class="section-title" style="margin-top:2.4rem;">Ejemplos por asignatura</h2>
+  <p class="section-sub">
+    A continuación se muestran ejemplos simplificados de cómo se
+    integraría el asistente en materias específicas, sin cambiar la
+    planificación general del profesor.
+  </p>
+
+  <div class="subject-blocks">
+    <section class="subject">
+      <h3>Matemática</h3>
+      <p>
+        Uso típico: el profesor explica un procedimiento y deja una
+        lista de problemas. Mientras los alumnos trabajan,
+        VALEN-LLAMA sirve para:
+      </p>
+      <p>
+        • repetir el método paso a paso<br/>
+        • mostrar otro ejemplo resuelto<br/>
+        • aclarar el significado de símbolos o propiedades
+      </p>
+      <p style="margin-top:0.5rem;">
+        Resultado esperado: menos tiempo bloqueado en un solo
+        ejercicio y más práctica efectiva.
+      </p>
+    </section>
+
+    <section class="subject">
+      <h3>Física</h3>
+      <p>
+        El asistente ayuda a traducir la teoría en ejemplos concretos:
+      </p>
+      <p>
+        • explicaciones de conceptos como <span>velocidad</span>,
+        <span>fuerza</span> o <span>energía</span> con lenguaje cercano<br/>
+        • generación de problemas que usen situaciones del
+        contexto cubano (transporte, electricidad, etc.)<br/>
+        • revisión rápida de fórmulas necesarias para un tema.
+      </p>
+    </section>
+
+    <section class="subject">
+      <h3>Informática</h3>
+      <p>
+        Mientras el grupo programa, el docente supervisa y la IA:
+      </p>
+      <p>
+        • sugiere correcciones a errores frecuentes de sintaxis<br/>
+        • explica comandos básicos del lenguaje que se esté usando<br/>
+        • propone pequeñas mejoras al código sin escribirlo todo
+          por el estudiante.
+      </p>
+    </section>
+  </div>
+
+  <!-- cierre -->
+  <section class="closing">
+    <strong>VALEN-LLAMA no sustituye al profesor,</strong> pero sí cambia la
+    dinámica del aula: menos tiempo perdido esperando una respuesta
+    y más tiempo dedicado a entender, practicar y crear.  
+    En un contexto con pocos recursos y sin acceso estable a la nube,
+    un asistente local así puede marcar la diferencia entre “no avanzar”
+    y “seguir aprendiendo a pesar de las limitaciones”.
+  </section>
+</main>
+
+<footer>
+  Casos de uso de VALEN-LLAMA · Aplicaciones prácticas en centros educativos cubanos
+</footer>
+
+</body>
+</html>

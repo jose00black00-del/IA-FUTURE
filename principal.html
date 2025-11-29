@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>VALEN-LLAMA | IA Local para Cuba</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* Animación brillo neón del panel */
+    @keyframes neonPulse {
+      0% {
+        box-shadow: 0 18px 45px rgba(255, 47, 214, 0.3);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      50% {
+        box-shadow: 0 22px 60px rgba(63, 213, 255, 0.6);
+        border-color: rgba(63, 213, 255, 0.7);
+      }
+      100% {
+        box-shadow: 0 18px 45px rgba(255, 47, 214, 0.3);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    /* Animación fondo “respirando” */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @keyframes bgShift {
+      0% {
+        background-position: 0% 0%, 100% 100%, 0 0;
+      }
+      50% {
+        background-position: 30% 10%, 80% 90%, 0 0;
+      }
+      100% {
+        background-position: 0% 20%, 100% 80%, 0 0;
+      }
+    }
+
+    /* LED del “Modo tesis” parpadeando */
+    @keyframes dotBlink {
+      0%, 20% { opacity: 1; transform: scale(1); }
+      21%, 40% { opacity: 0.3; transform: scale(0.7); }
+      41%, 100% { opacity: 1; transform: scale(1); }
+    }
+
+    :root {
+      --bg: #02030a;
+      --bg-panel: #080a16;
+      --bg-panel-soft: #0c1021;
+      --accent: #ff2fd6;
+      --accent-soft: rgba(255, 47, 214, 0.15);
+      --accent-blue: #3fd5ff;
+      --accent-blue-soft: rgba(63, 213, 255, 0.18);
+      --text: #e8ecff;
+      --muted: #8f96b2;
+      --border-soft: rgba(255, 255, 255, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      background:
+        radial-gradient(circle at top left, #161a3a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #2c0740 0, transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      animation: bgShift 22s ease-in-out infinite alternate;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 3, 10, 0.96),
+        rgba(2, 3, 10, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .shell-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2rem;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .logo-main {
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      gap: 1.7rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      position: relative;
+      color: var(--muted);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      transition: width 0.18s ease-out;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .container {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 2.5rem 1.4rem 3.5rem;
+    }
+
+    /* HERO */
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    .kicker {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.18rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: radial-gradient(circle at 0 0, #341931 0, #080a16 70%);
+    }
+
+    .kicker-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: dotBlink 1.8s infinite;
+    }
+
+    h1.hero-title {
+      font-size: clamp(2.3rem, 4vw, 3rem);
+      margin-bottom: 0.7rem;
+    }
+
+    .hero-title span {
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 34rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .hero-highlight {
+      font-size: 0.9rem;
+      color: var(--accent-blue);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.6rem 1.3rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+        background 0.12s ease-out, border-color 0.12s;
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, var(--accent), #4c0b7a);
+      box-shadow: 0 0 20px rgba(255, 47, 214, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 28px rgba(255, 47, 214, 0.7);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent-blue);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .hero-meta strong {
+      font-size: 0.95rem;
+      color: var(--accent-blue);
+    }
+
+    .console-panel {
+      position: relative;
+      background: radial-gradient(circle at top left, #300b3f 0, #05060d 55%);
+      border-radius: 18px;
+      padding: 1.3rem 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      animation: neonPulse 8s infinite ease-in-out;
+    }
+
+    .console-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        rgba(255, 47, 214, 0.18),
+        transparent,
+        rgba(63, 213, 255, 0.12)
+      );
+      mix-blend-mode: soft-light;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .console-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .console-dots {
+      display: flex;
+      gap: 0.3rem;
+    }
+
+    .console-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff7675;
+    }
+
+    .console-dot:nth-child(2) {
+      background: #ffeaa7;
+    }
+
+    .console-dot:nth-child(3) {
+      background: #55efc4;
+    }
+
+    .console-body {
+      font-size: 0.82rem;
+      margin-top: 0.4rem;
+    }
+
+    .console-input {
+      color: var(--accent-blue);
+    }
+
+    .console-output {
+      margin-top: 0.4rem;
+      padding: 0.6rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--accent);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .console-status {
+      margin-top: 0.7rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* SECCIONES */
+
+    section {
+      margin-top: 2.4rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title span {
+      color: var(--accent-blue);
+    }
+
+    .section-grid {
+      display: grid;
+      gap: 1.4rem;
+    }
+
+    .card {
+      background: var(--bg-panel);
+      border-radius: 14px;
+      padding: 1.1rem 1.1rem 1rem;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.65);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(63, 213, 255, 0.12),
+        transparent
+      );
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      color: var(--accent-blue);
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      border: 1px solid rgba(255, 47, 214, 0.5);
+    }
+
+    .badge-blue {
+      background: var(--accent-blue-soft);
+      color: var(--accent-blue);
+      border-color: rgba(63, 213, 255, 0.55);
+    }
+
+    .list {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding-left: 1.1rem;
+    }
+
+    .list li {
+      margin-bottom: 0.3rem;
+    }
+
+    .callout {
+      background: var(--bg-panel-soft);
+      border-radius: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .callout strong {
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.5rem 1.4rem 2.1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2.5rem;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 850px) {
+      .shell-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding-inline: 1rem;
+      }
+
+      nav {
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="shell-bar">
+      <div class="logo">
+        <div class="logo-main">VALEN-LLAMA</div>
+        <div class="logo-sub">Asistente de IA local · Proyecto de tesis</div>
+      </div>
+
+      <nav>
+        <a href="principal.html">Inicio</a>
+        <a href="sistema.html">El Sistema</a>
+        <a href="casos.html">Casos de uso</a>
+        <a href="descarga.html">Instalación</a>
+        <a href="autor.html">Autor</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- HERO -->
+      <section class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span class="kicker-dot"></span>
+            Modo tesis · IA offline para centros escolares cubanos
+          </div>
+          <h1 class="hero-title">
+            IA Local para Cuba,<br /><span>sin depender de internet.</span>
+          </h1>
+          <p class="hero-lead">
+            Las escuelas y centros de estudio en Cuba trabajan con recursos
+            limitados: laboratorios desactualizados, conexiones inestables y
+            poca disponibilidad de servicios en la nube. Sin embargo, la
+            necesidad de herramientas inteligentes crece cada día.
+          </p>
+          <p class="hero-highlight">
+            VALEN-LLAMA demuestra que es posible acercar la inteligencia
+            artificial a los estudiantes usando solo una computadora convencional
+            y modelos locales optimizados.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary" onclick="location.href='sistema.html'">
+              Ver arquitectura del sistema
+            </button>
+            <button class="btn btn-ghost" onclick="location.href='casos.html'">
+              Ejemplos de uso en el aula
+            </button>
+          </div>
+          <div class="hero-meta">
+            <div>
+              <strong>IA local</strong><br />
+              Modelo Llama ejecutándose en la propia máquina.
+            </div>
+            <div>
+              <strong>Módulo de asociaciones</strong><br />
+              Respuestas adaptadas al contexto del creador.
+            </div>
+            <div>
+              <strong>Enfoque educativo</strong><br />
+              Pensado para apoyar el estudio y la investigación.
+            </div>
+          </div>
+        </div>
+
+        <aside class="console-panel">
+          <div class="console-header">
+            <span>valen-llama.exe — sesión de prueba</span>
+            <div class="console-dots">
+              <span class="console-dot"></span>
+              <span class="console-dot"></span>
+              <span class="console-dot"></span>
+            </div>
+          </div>
+          <div class="console-body">
+            <div class="console-input">Tú &gt; ¿Puedes funcionar sin internet?</div>
+            <div class="console-output">
+              Valen &gt; Puedo procesar tus comandos usando el modelo Llama
+              que está instalado en tu equipo y el módulo de asociaciones
+              que programaste en Python. No necesito conexión para ayudarte:
+              mientras tu computadora esté encendida, sigo contigo.
+            </div>
+            <div class="console-status">
+              [CPU: 42%] [RAM: 71%] · Estado:
+              <span style="color:var(--accent-blue);">Activo</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- 1. LIMITACIONES TECNOLÓGICAS -->
+      <section>
+        <div class="section-label">01 · Contexto</div>
+        <h2 class="section-title">
+          Limitaciones tecnológicas y electrónicas en los centros escolares
+        </h2>
+        <div class="section-grid">
+          <article class="card">
+            <span class="badge badge-blue">Problemas detectados</span>
+            <ul class="list">
+              <li>Equipos con varios años de uso y poca capacidad de actualización.</li>
+              <li>Acceso restringido o inestable a internet desde los laboratorios.</li>
+              <li>Software educativo limitado, muchas veces desactualizado.</li>
+              <li>Dificultad para experimentar con herramientas modernas de IA.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <span class="badge">Oportunidad</span>
+            <p>
+              Frente a estas condiciones, surge la posibilidad de aprovechar
+              modelos de IA que se ejecuten completamente <strong>de forma local</strong>,
+              sin depender de servidores externos. VALEN-LLAMA explora esta línea
+              como una alternativa realista para el contexto cubano.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 2. POR QUÉ NECESITAMOS IA EN LAS ESCUELAS -->
+      <section>
+        <div class="section-label">02 · Necesidad</div>
+        <h2 class="section-title">
+          ¿Por qué necesitamos IA en las escuelas?
+        </h2>
+        <article class="card">
+          <h3>Un acompañante para el aprendizaje, no un sustituto del profesor</h3>
+          <p>
+            La IA puede convertirse en una herramienta de apoyo para aclarar
+            dudas, explicar conceptos con distintos niveles de detalle,
+            generar ejercicios personalizados y ofrecer ejemplos adaptados al
+            ritmo de cada estudiante. Le da al alumno un espacio seguro para
+            preguntar sin miedo a “hacer el ridículo”.
+          </p>
+        </article>
+      </section>
+
+      <!-- 3. POR QUÉ VALE LA PENA INVERTIR TIEMPO -->
+      <section>
+        <div class="section-label">03 · Inversión de tiempo</div>
+        <h2 class="section-title">
+          ¿Por qué vale la pena invertir tiempo en esto?
+        </h2>
+        <div class="section-grid">
+          <article class="card">
+            <h3>Construir capacidad local</h3>
+            <p>
+              Desarrollar un asistente propio obliga a conocer cómo funcionan
+              los modelos, cómo se integran, qué recursos consumen y qué
+              riesgos existen. Cada hora invertida se convierte en experiencia
+              que queda dentro del país.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Reutilización y escalabilidad</h3>
+            <p>
+              Un prototipo como VALEN-LLAMA puede replicarse en otros centros,
+              adaptarse a nuevas asignaturas o integrarse con plataformas
+              existentes. No es un experimento aislado: puede convertirse en
+              base para futuros proyectos.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4. DE QUÉ MANERAS AYUDARÍA LA IA -->
+      <section>
+        <div class="section-label">04 · Apoyo concreto</div>
+        <h2 class="section-title">
+          ¿De qué maneras ayudaría la IA en el entorno escolar?
+        </h2>
+        <article class="card">
+          <ul class="list">
+            <li>Generación de explicaciones alternativas para temas complejos.</li>
+            <li>Creación rápida de ejercicios, cuestionarios y ejemplos prácticos.</li>
+            <li>Apoyo a la programación: revisión de código, sugerencias y corrección de errores.</li>
+            <li>Consultas rápidas sobre definiciones, fórmulas y conceptos teóricos.</li>
+            <li>Registro de asociaciones personalizadas para cada centro o asignatura.</li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- 5. ¿ES OPCIONAL? -->
+      <section>
+        <div class="section-label">05 · Futuro</div>
+        <h2 class="section-title">
+          ¿Es opcional? <span>No. Es el futuro.</span>
+        </h2>
+        <div class="callout">
+          <strong>La inteligencia artificial no es una moda.</strong> Es una capa
+          más de la infraestructura tecnológica del mundo. Ignorarla en los
+          procesos educativos significa formar generaciones que llegarán tarde
+          a la realidad que ya se está construyendo.
+          <br /><br />
+          VALEN-LLAMA no pretende ser la solución definitiva, sino una prueba
+          de que es posible experimentar, aprender y construir desde nuestras
+          propias limitaciones. Es un primer paso para que la IA también
+          hable con acento cubano.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    Proyecto de Tesis – Asistente conversacional VALEN-LLAMA · IA local para
+    centros educativos cubanos
+  </footer>
+</body>
+</html>

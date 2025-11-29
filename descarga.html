@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>VALEN-LLAMA | Instalación</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #02030a;
+      --panel: #090b14;
+      --panel-soft: #0d1020;
+      --text: #e8ecff;
+      --muted: #8f96b2;
+      --accent: #ff2fd6;
+      --accent-blue: #3fd5ff;
+      --border-soft: rgba(255,255,255,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      background:
+        radial-gradient(circle at top left, #161a3a 0, transparent 55%),
+        radial-gradient(circle at bottom right, #2c0740 0, transparent 60%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 3, 10, 0.96),
+        rgba(2, 3, 10, 0.7),
+        transparent
+      );
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .shell-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 2rem;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .logo-main {
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.8rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      position: relative;
+      color: var(--muted);
+    }
+
+    nav a:hover {
+      color: var(--accent-blue);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      transition: width 0.18s ease-out;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .active-link {
+      color: var(--accent-blue);
+    }
+    .active-link::after {
+      width: 100%;
+    }
+
+    main {
+      width: min(1000px, 100%);
+      margin: 0 auto;
+      padding: 2.7rem 1.4rem 3.4rem;
+    }
+
+    .page-kicker {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .intro-text {
+      font-size: 0.96rem;
+      color: var(--muted);
+      max-width: 40rem;
+      line-height: 1.6;
+      margin-bottom: 1.6rem;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: 1.7rem;
+      margin-bottom: 2.3rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 16px;
+      padding: 1.1rem 1.25rem 1.2rem;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+    }
+
+    .panel h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent-blue);
+    }
+
+    .panel p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--accent-blue);
+      margin-bottom: 0.5rem;
+      background: rgba(0,0,0,0.35);
+    }
+
+    .requirements-list,
+    .steps-list {
+      list-style: none;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    .requirements-list li,
+    .steps-list li {
+      margin-bottom: 0.45rem;
+    }
+
+    .steps-list li span {
+      color: var(--accent-blue);
+    }
+
+    .code-box {
+      background: var(--panel-soft);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 0.65rem 0.8rem;
+      font-size: 0.8rem;
+      color: #b4c4ff;
+      margin-top: 0.4rem;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-top: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title span {
+      color: var(--accent-blue);
+    }
+
+    .section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      max-width: 36rem;
+    }
+
+    .checklist-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+    @media (min-width: 820px) {
+      .checklist-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .check-item {
+      background: #070916;
+      border-radius: 14px;
+      border: 1px dashed rgba(255,255,255,0.25);
+      padding: 0.85rem 0.95rem 0.95rem;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .check-item strong {
+      display:block;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+    }
+
+    .warning {
+      margin-top: 2.2rem;
+      background: linear-gradient(
+        120deg,
+        rgba(255,47,214,0.13),
+        rgba(63,213,255,0.12)
+      );
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 1.1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #f5f5ff;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.7);
+    }
+
+    .warning strong {
+      color:#ffffff;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.4rem 1.3rem 2.1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 2.8rem;
+    }
+
+    @media (max-width: 720px) {
+      .shell-bar {
+        padding-inline: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+      nav {
+        gap: 1.1rem;
+        flex-wrap: wrap;
+      }
+      .grid-two {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="shell-bar">
+    <div class="logo">
+      <div class="logo-main">VALEN-LLAMA</div>
+      <div class="logo-sub">Asistente de IA local · Proyecto de tesis</div>
+    </div>
+
+    <nav>
+      <a href="principal.html">Inicio</a>
+      <a href="sistema.html">El Sistema</a>
+      <a href="casos.html">Casos de uso</a>
+      <a href="descarga.html" class="active-link">Instalación</a>
+      <a href="autor.html">Autor</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page-kicker">Guía básica</div>
+  <h1>Instalación de <span>VALEN-LLAMA</span></h1>
+  <p class="intro-text">
+    Esta sección describe, de forma resumida, cómo se prepara un equipo
+    convencional para ejecutar el asistente VALEN-LLAMA sin conexión a
+    internet. No es un manual técnico completo, sino una guía clara para
+    reproducir el entorno de pruebas usado en la tesis.
+  </p>
+
+  <!-- requisitos y visión general -->
+  <div class="grid-two">
+    <section class="panel">
+      <span class="tag">Requisitos mínimos sugeridos</span>
+      <h2>Equipo del laboratorio</h2>
+      <ul class="requirements-list">
+        <li>• Sistema operativo de escritorio (por ejemplo, Windows).</li>
+        <li>• Procesador convencional de 64 bits.</li>
+        <li>• Al menos 8 GB de memoria RAM recomendados.</li>
+        <li>• Espacio libre en disco para el modelo de IA y los archivos del proyecto.</li>
+        <li>• Python instalado y funcionando correctamente.</li>
+      </ul>
+      <p>
+        El objetivo es demostrar que no se necesitan servidores externos:
+        todo ocurre dentro de la misma máquina del laboratorio.
+      </p>
+    </section>
+
+    <section class="panel">
+      <span class="tag">Flujo general</span>
+      <h2>Qué se instala exactamente</h2>
+      <p>
+        La instalación se divide en tres partes:
+      </p>
+      <ul class="requirements-list">
+        <li>1. Entorno de Python y dependencias básicas.</li>
+        <li>2. Archivos del proyecto VALEN-LLAMA (código y recursos).</li>
+        <li>3. Modelo de lenguaje local y módulo de asociaciones.</li>
+      </ul>
+      <p>
+        Una vez completados estos pasos, el asistente se ejecuta desde una
+        ventana de consola, sin necesidad de internet.
+      </p>
+    </section>
+  </div>
+
+  <!-- pasos de instalación -->
+  <h2 class="section-title">Pasos de <span>instalación</span></h2>
+  <p class="section-sub">
+    A continuación se muestra una ruta de instalación simplificada, pensada
+    para replicar el prototipo en otros equipos del centro.
+  </p>
+
+  <section class="panel">
+    <h2>1. Preparar el entorno</h2>
+    <ul class="steps-list">
+      <li><span>1.1</span> Verificar que el sistema operativo esté actualizado y que el
+        usuario tenga permisos para instalar software.</li>
+      <li><span>1.2</span> Instalar Python desde un instalador confiable y activar la
+        opción de añadirlo a la variable de entorno del sistema.</li>
+      <li><span>1.3</span> Crear una carpeta dedicada al proyecto, por ejemplo:
+        <em>C:\VALEN_LLAMA\</em>.</li>
+    </ul>
+    <div class="code-box">
+      C:\VALEN_LLAMA\  &nbsp;&nbsp;// Carpeta principal del asistente
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:1.4rem;">
+    <h2>2. Copiar los archivos del proyecto</h2>
+    <ul class="steps-list">
+      <li><span>2.1</span> Copiar en la carpeta del proyecto los archivos de código del
+        asistente (scripts en Python, configuraciones y recursos).</li>
+      <li><span>2.2</span> Mantener una estructura sencilla de subcarpetas para
+        distinguir: código, datos del modelo y asociaciones.</li>
+      <li><span>2.3</span> Comprobar que todos los archivos necesarios están presentes
+        antes de continuar.</li>
+    </ul>
+    <div class="code-box">
+      C:\VALEN_LLAMA\<br/>
+      ├─ codigo\<br/>
+      ├─ modelo\<br/>
+      └─ asociaciones\
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:1.4rem;">
+    <h2>3. Configurar el modelo local</h2>
+    <ul class="steps-list">
+      <li><span>3.1</span> Copiar el modelo de lenguaje local en la carpeta asignada
+        (por ejemplo, <em>modelo\</em>).</li>
+      <li><span>3.2</span> Ajustar en el código la ruta donde se carga el modelo,
+        de modo que el asistente siempre lo busque en disco y no en la nube.</li>
+      <li><span>3.3</span> Probar un inicio rápido para comprobar que el modelo
+        se carga sin errores de memoria.</li>
+    </ul>
+  </section>
+
+  <section class="panel" style="margin-top:1.4rem;">
+    <h2>4. Ejecutar VALEN-LLAMA</h2>
+    <ul class="steps-list">
+      <li><span>4.1</span> Abrir una ventana de consola en la carpeta del proyecto.</li>
+      <li><span>4.2</span> Iniciar el asistente mediante el comando configurado
+        (por ejemplo, ejecutar un archivo <em>.py</em> principal).</li>
+      <li><span>4.3</span> Esperar a que aparezca el mensaje de bienvenida y
+        verificar que el sistema responde a una pregunta sencilla.</li>
+    </ul>
+    <div class="code-box">
+      python codigo\valen_llama_main.py
+    </div>
+  </section>
+
+  <!-- checklist y notas -->
+  <h2 class="section-title" style="margin-top:2.5rem;">Lista rápida de verificación</h2>
+  <p class="section-sub">
+    Antes de presentar el sistema en el laboratorio o en la defensa de la
+    tesis, conviene revisar estos puntos.
+  </p>
+
+  <div class="checklist-grid">
+    <div class="check-item">
+      <strong>Prueba sin internet</strong>
+      Confirmar que el asistente arranca y responde correctamente con la
+      conexión desactivada.
+    </div>
+    <div class="check-item">
+      <strong>Consumo de recursos</strong>
+      Revisar el uso de CPU y RAM mientras se hacen varias preguntas
+      seguidas para comprobar que el equipo lo soporta.
+    </div>
+    <div class="check-item">
+      <strong>Escenarios de demostración</strong>
+      Preparar algunas preguntas de ejemplo (matemática, física,
+      programación) para mostrar el sistema en acción.
+    </div>
+  </div>
+
+  <section class="warning">
+    <strong>Nota importante:</strong>  
+    VALEN-LLAMA es un prototipo académico. La instalación descrita aquí
+    está pensada para laboratorios controlados y equipos específicos del
+    centro. Cualquier adaptación a otros entornos debe respetar siempre
+    las políticas de seguridad informática y el uso responsable de los
+    recursos del laboratorio.
+  </section>
+</main>
+
+<footer>
+  Guía de instalación de VALEN-LLAMA · Prototipo de IA local para centros educativos cubanos
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>VALEN-LLAMA | Autor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{
+      --bg:#02030a;
+      --bg-soft:#060818;
+      --text:#e8ecff;
+      --muted:#8f96b2;
+      --accent:#ff2fd6;
+      --accent-blue:#3fd5ff;
+      --border-soft:rgba(255,255,255,0.08);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"JetBrains Mono", Consolas, monospace;
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left,#20194a 0,transparent 55%),
+        radial-gradient(circle at bottom right,#3a0757 0,transparent 60%),
+        var(--bg);
+      overflow-x:hidden;
+      animation:bgShift 24s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift{
+      0%{background-position:0% 0%,100% 100%,0 0;}
+      50%{background-position:20% 10%,80% 90%,0 0;}
+      100%{background-position:0% 20%,100% 80%,0 0;}
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(
+        to bottom,
+        rgba(2,3,10,0.96),
+        rgba(2,3,10,0.75),
+        transparent
+      );
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .shell-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0.85rem 2rem;
+    }
+
+    .logo{
+      display:flex;
+      flex-direction:column;
+      gap:0.1rem;
+    }
+
+    .logo-main{
+      font-weight:800;
+      letter-spacing:0.15em;
+      font-size:1rem;
+      color:var(--accent);
+    }
+
+    .logo-sub{
+      font-size:0.7rem;
+      color:var(--muted);
+      text-transform:uppercase;
+    }
+
+    nav{
+      display:flex;
+      gap:1.8rem;
+      font-size:0.9rem;
+    }
+
+    nav a{
+      position:relative;
+      color:var(--muted);
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;
+      bottom:-0.25rem;
+      width:0;
+      height:2px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-blue));
+      transition:width 0.18s ease-out;
+    }
+
+    nav a:hover{
+      color:var(--text);
+    }
+
+    nav a:hover::after{
+      width:100%;
+    }
+
+    .active-link{
+      color:var(--accent-blue);
+    }
+    .active-link::after{
+      width:100%;
+    }
+
+    main{
+      width:min(960px,100%);
+      margin:0 auto;
+      padding:2.8rem 1.4rem 3.6rem;
+      position:relative;
+    }
+
+    /* orbes decorativos */
+    .orb{
+      position:fixed;
+      border-radius:999px;
+      filter:blur(18px);
+      opacity:0.6;
+      pointer-events:none;
+      mix-blend-mode:screen;
+      z-index:-1;
+      animation:float 18s ease-in-out infinite alternate;
+    }
+    .orb.orb-1{
+      width:220px;height:220px;
+      background:radial-gradient(circle,#ff2fd6,transparent 60%);
+      top:18%;left:-40px;
+    }
+    .orb.orb-2{
+      width:260px;height:260px;
+      background:radial-gradient(circle,#3fd5ff,transparent 60%);
+      bottom:-60px;right:-40px;
+      animation-delay:4s;
+    }
+    @keyframes float{
+      0%{transform:translateY(0) translateX(0);}
+      50%{transform:translateY(-20px) translateX(10px);}
+      100%{transform:translateY(10px) translateX(-10px);}
+    }
+
+    .page-kicker{
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      color:var(--muted);
+      margin-bottom:0.3rem;
+    }
+
+    h1{
+      font-size:2.1rem;
+      margin-bottom:0.4rem;
+    }
+    h1 span{
+      color:var(--accent);
+    }
+
+    .subtitle{
+      font-size:0.95rem;
+      color:var(--muted);
+      max-width:36rem;
+      margin-bottom:2rem;
+      line-height:1.6;
+    }
+
+    .author-grid{
+      display:grid;
+      grid-template-columns:minmax(0,3fr) minmax(0,2.2fr);
+      gap:2rem;
+      align-items:stretch;
+    }
+
+    @media (max-width:820px){
+      .shell-bar{
+        padding-inline:1.1rem;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:0.4rem;
+      }
+      nav{
+        gap:1.1rem;
+        flex-wrap:wrap;
+      }
+      .author-grid{
+        grid-template-columns:minmax(0,1fr);
+      }
+    }
+
+    .panel{
+      background:rgba(6,8,24,0.96);
+      border-radius:18px;
+      border:1px solid var(--border-soft);
+      padding:1.3rem 1.4rem 1.5rem;
+      box-shadow:0 18px 45px rgba(0,0,0,0.7);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      background:conic-gradient(
+        from 120deg,
+        rgba(255,47,214,0.2),
+        transparent,
+        rgba(63,213,255,0.18),
+        transparent,
+        rgba(255,47,214,0.2)
+      );
+      opacity:0;
+      mix-blend-mode:screen;
+      animation:borderGlow 10s linear infinite;
+      pointer-events:none;
+    }
+
+    @keyframes borderGlow{
+      0%,20%{opacity:0;}
+      40%{opacity:0.7;}
+      60%{opacity:0.25;}
+      100%{opacity:0;}
+    }
+
+    .panel h2{
+      font-size:1.1rem;
+      margin-bottom:0.6rem;
+      color:var(--accent-blue);
+    }
+
+    .panel p{
+      font-size:0.9rem;
+      color:var(--muted);
+      line-height:1.65;
+      margin-bottom:0.8rem;
+    }
+
+    .highlight{
+      color:var(--accent);
+    }
+
+    .list-points{
+      list-style:none;
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-top:0.3rem;
+    }
+    .list-points li{
+      margin-bottom:0.45rem;
+    }
+    .list-points li span{
+      color:var(--accent-blue);
+    }
+
+    /* panel mano neon */
+    .hand-panel{
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:center;
+      text-align:center;
+      background:radial-gradient(circle at top,rgba(255,47,214,0.16),rgba(3,4,14,0.96));
+    }
+
+    .neon-hand{
+      font-size:3.7rem;
+      margin-top:0.5rem;
+      color:var(--accent);
+      text-shadow:
+        0 0 8px rgba(255,47,214,0.8),
+        0 0 24px rgba(255,47,214,0.9),
+        0 0 42px rgba(63,213,255,0.7);
+      animation:handWave 1.9s ease-in-out infinite;
+      transform-origin:70% 70%;
+    }
+
+    @keyframes handWave{
+      0%{transform:rotate(0deg) translateY(0);}
+      15%{transform:rotate(16deg) translateY(-2px);}
+      30%{transform:rotate(-10deg) translateY(0);}
+      45%{transform:rotate(12deg) translateY(-2px);}
+      60%{transform:rotate(-6deg);}
+      100%{transform:rotate(0deg);}
+    }
+
+    .hand-title{
+      font-size:1rem;
+      margin-top:0.6rem;
+      margin-bottom:0.4rem;
+      color:var(--accent-blue);
+    }
+
+    .hand-sub{
+      font-size:0.83rem;
+      color:var(--muted);
+      max-width:15rem;
+      line-height:1.5;
+    }
+
+    .scan-line{
+      position:absolute;
+      left:0;
+      right:0;
+      height:1px;
+      background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.4),
+        transparent
+      );
+      top:0;
+      opacity:0.4;
+      animation:scan 4.5s linear infinite;
+    }
+    @keyframes scan{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(100%);}
+    }
+
+    .closing-text{
+      margin-top:2.4rem;
+      font-size:0.9rem;
+      color:var(--muted);
+      text-align:center;
+      max-width:40rem;
+      margin-inline:auto;
+      line-height:1.7;
+    }
+    .closing-text span{
+      color:var(--accent-blue);
+    }
+
+    footer{
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:1.5rem 1.3rem 2.1rem;
+      font-size:0.78rem;
+      color:var(--muted);
+      text-align:center;
+      margin-top:2.4rem;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<header>
+  <div class="shell-bar">
+    <div class="logo">
+      <div class="logo-main">VALEN-LLAMA</div>
+      <div class="logo-sub">Asistente de IA local · Proyecto de tesis</div>
+    </div>
+
+    <nav>
+      <a href="principal.html">Inicio</a>
+      <a href="sistema.html">El Sistema</a>
+      <a href="casos.html">Casos de uso</a>
+      <a href="descarga.html">Instalación</a>
+      <a href="autor.html" class="active-link">Autor</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page-kicker">Creador del proyecto</div>
+  <h1>Sobre el autor <span>(y sobre ti)</span></h1>
+  <p class="subtitle">
+    VALEN-LLAMA no nace de un gran laboratorio ni de un presupuesto enorme.
+    Nace de algo mucho más común, pero igual de poderoso: ganas de aprender,
+    curiosidad y unas cuantas noches frente a una pantalla.
+  </p>
+
+  <section class="author-grid">
+
+    <!-- panel texto -->
+    <article class="panel">
+      <div class="scan-line"></div>
+      <h2>1. Todos podemos, si de verdad queremos</h2>
+      <p>
+        No hace falta ser un genio ni tener la computadora perfecta.
+        Este proyecto fue construido desde un contexto cubano, con
+        recursos limitados y muchas restricciones, pero con una idea
+        clara: <span class="highlight">acercar la IA a las escuelas</span>.
+      </p>
+
+      <ul class="list-points">
+        <li><span>›</span> Si puedes leer esto, también puedes aprender a programar.</li>
+        <li><span>›</span> Si entiendes la idea general, puedes mejorarla.</li>
+        <li><span>›</span> Si hoy no sabes algo, mañana puede ser distinto.</li>
+      </ul>
+
+      <h2>2. Nada es tan difícil con esfuerzo constante</h2>
+      <p>
+        VALEN-LLAMA no salió de un día para otro brillante y perfecto.
+        Hubo errores, pantallas negras, códigos que no arrancaban y
+        modelos que consumían más memoria de la cuenta. Cada fallo fue
+        un paso más hacia algo que sí funcionaba.
+      </p>
+      <p>
+        La conclusión es simple: <span class="highlight">lo difícil no desaparece</span>,
+        pero se vuelve manejable cuando insistes lo suficiente.
+      </p>
+
+      <h2>3. Primero hacen falta ideas, luego manos</h2>
+      <p>
+        Un país puede tener muy poco hardware, pero si tiene ideas y
+        gente dispuesta a ejecutarlas, todavía tiene futuro. La IA local
+        es una de esas ideas: no depende de una gran nube, sino de
+        personas que quieran construir.
+      </p>
+      <p>
+        Este proyecto es una invitación a eso: a que aparezcan más manos,
+        más versiones, más prototipos que vayan mucho más lejos.
+      </p>
+
+      <h2>4. Yo lo hice en unos días… tú puedes hacer más</h2>
+      <p>
+        Mi nombre es <span class="highlight">José</span> y este asistente forma parte
+        de mi tesis. Gran parte del código y del diseño de las páginas
+        fue construido en unos pocos días de trabajo intenso.
+      </p>
+      <p>
+        Si con tan poco tiempo se pudo llegar hasta aquí, es legítimo
+        preguntar: <span class="highlight">¿qué pasaría si tú trabajas meses o años
+        sobre tu propia idea?</span>
+      </p>
+    </article>
+
+    <!-- panel mano neon -->
+    <aside class="panel hand-panel">
+      <div class="scan-line"></div>
+      <div class="neon-hand">👋</div>
+      <div class="hand-title">Gracias por llegar hasta aquí</div>
+      <p class="hand-sub">
+        Este proyecto termina en la tesis, pero la historia de la IA
+        local en Cuba no tiene por qué hacerlo.  
+        Si algo de esto te inspira, ya empezó tu parte del código.
+      </p>
+    </aside>
+  </section>
+
+  <p class="closing-text">
+    No es solo un asistente llamado VALEN-LLAMA. Es una prueba de que
+    con curiosidad, disciplina y un poco de rebeldía técnica, desde
+    cualquier aula se puede construir algo que merezca existir.  
+    <span>La próxima versión puede llevar tu nombre.</span>
+  </p>
+</main>
+
+<footer>
+  Página del autor · Proyecto VALEN-LLAMA · IA local desarrollada como tesis en un contexto cubano real
+</footer>
+
+</body>
+</html>
